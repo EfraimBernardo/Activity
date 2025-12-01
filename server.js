@@ -1,59 +1,68 @@
-require('dotenv').config();
-const express = require('express');
-const nodemailer = require('nodemailer');
-const path = require('path');
+// server.js
+const express = require("express");
+const nodemailer = require("nodemailer");
+const cors = require("cors");
 
 const app = express();
-const PORT = process.env.PORT || 10000;
-
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static('public'));
 
-// Configuração do Nodemailer com MailerSend
+// Configuração do Nodemailer para MailerSend
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
   port: parseInt(process.env.SMTP_PORT),
-  secure: false, // true para 465, false para 587
+  secure: false,        // não usar SSL direto
+  requireTLS: true,     // força TLS
   auth: {
-     user: process.env.SMTP_USER?.trim(),
-     pass: process.env.SMTP_PASS?.trim()
-  }
+    user: process.env.SMTP_USER && process.env.SMTP_USER.trim(),
+    pass: process.env.SMTP_PASS && process.env.SMTP_PASS.trim(),
+  },
+  logger: true,  // logs detalhados no Render
+  debug: true
 });
 
-app.post('/enviar', async (req, res) => {
-  const { Nome, Idade, Email, Telefone, Pretende, Instituicao, Saber, Comentarios } = req.body;
+// Rota para envio de formulário
+app.post("/enviar", async (req, res) => {
+  const {
+    Nome,
+    Idade,
+    Email,
+    Telefone,
+    Pretende,
+    Instituicao,
+    Saber,
+    Comentarios
+  } = req.body;
 
-  if (!Nome || !Idade || !Email || !Telefone || !Pretende || !Instituicao || !Saber) {
-    return res.status(400).send('Preencha todos os campos obrigatórios!');
-  }
-
-  const mensagem = `
-    Nome: ${Nome}
-    Idade: ${Idade}
-    Email: ${Email}
-    Telefone: ${Telefone}
-    VISÃO SOBRE A ACTIVIDADE: ${Pretende}
-    RESULTADOS ESPERADOS: ${Instituicao}
-    COMO SOUBE DA ACTIVIDADE: ${Saber}
-    Comentários: ${Comentarios || 'N/A'}
-  `;
+  const mailOptions = {
+    from: `"${Nome}" <${process.env.SMTP_USER && process.env.SMTP_USER.trim()}>`,
+    to: process.env.EMAIL_DESTINO,  // seu Gmail
+    subject: `Novo cadastro da actividade: ${Nome}`,
+    text: `
+Nome: ${Nome}
+Idade: ${Idade}
+Email: ${Email}
+Telefone: ${Telefone}
+Visão: ${Pretende}
+Resultados esperados: ${Instituicao}
+Como soube: ${Saber}
+Comentários: ${Comentarios || "Nenhum"}
+    `
+  };
 
   try {
-    await transporter.sendMail({
-      from: `"Activity Form" <${process.env.SMTP_USER}>`,
-      to: process.env.EMAIL_DESTINO,
-      subject: 'Novo cadastro na actividade',
-      text: mensagem
-    });
-
-   res.send("Email enviado com sucesso!");
+    await transporter.sendMail(mailOptions);
+    console.log(`✅ Email enviado para ${process.env.EMAIL_DESTINO}`);
+    res.send("Formulário enviado com sucesso! ✅");
   } catch (error) {
-    console.error('Erro no envio:', error);
-    res.status(500).send('❌ Erro ao enviar email. Tente novamente.');
+    console.error("❌ Erro ao enviar e-mail:", error);
+    res.status(500).send("Erro ao enviar o formulário. Tente novamente ❌");
   }
 });
 
+// Porta do servidor
+const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
-  console.log(`Servidor rodando em http://localhost:${PORT}`);
+  console.log(`Servidor rodando na porta ${PORT}`);
 });
