@@ -71,8 +71,8 @@
           body: JSON.stringify(data)
         });
 
-        const result = await response.text();
-        alert(result);
+          const result = await response.text();
+          alert(result);  // agora será legível
 
         if (response.ok) {
           this.reset();

@@ -47,7 +47,7 @@ app.post('/enviar', async (req, res) => {
       text: mensagem
     });
 
-    res.send('✅ Dados enviados com sucesso! Verifique seu email.');
+   res.send("Email enviado com sucesso!");
   } catch (error) {
     console.error('Erro no envio:', error);
     res.status(500).send('❌ Erro ao enviar email. Tente novamente.');
