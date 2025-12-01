@@ -8,17 +8,31 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Configuração do Nodemailer para MailerSend
+// Trim das variáveis de ambiente
+const SMTP_USER = process.env.SMTP_USER ? process.env.SMTP_USER.trim() : "";
+const SMTP_PASS = process.env.SMTP_PASS ? process.env.SMTP_PASS.trim() : "";
+const SMTP_HOST = process.env.SMTP_HOST ? process.env.SMTP_HOST.trim() : "";
+const SMTP_PORT = process.env.SMTP_PORT ? parseInt(process.env.SMTP_PORT.trim()) : 587;
+const EMAIL_DESTINO = process.env.EMAIL_DESTINO ? process.env.EMAIL_DESTINO.trim() : "";
+
+console.log("🚀 Variáveis de ambiente carregadas:");
+console.log("SMTP_USER:", SMTP_USER);
+console.log("SMTP_PASS:", SMTP_PASS ? "********" : "(vazio)");
+console.log("SMTP_HOST:", SMTP_HOST);
+console.log("SMTP_PORT:", SMTP_PORT);
+console.log("EMAIL_DESTINO:", EMAIL_DESTINO);
+
+// Transporter Nodemailer
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: parseInt(process.env.SMTP_PORT),
-  secure: false,        // não usar SSL direto
-  requireTLS: true,     // força TLS
+  host: SMTP_HOST,
+  port: SMTP_PORT,
+  secure: false,
+  requireTLS: true,
   auth: {
-    user: process.env.SMTP_USER && process.env.SMTP_USER.trim(),
-    pass: process.env.SMTP_PASS && process.env.SMTP_PASS.trim(),
+    user: SMTP_USER,
+    pass: SMTP_PASS,
   },
-  logger: true,  // logs detalhados no Render
+  logger: true,
   debug: true
 });
 
@@ -36,8 +50,8 @@ app.post("/enviar", async (req, res) => {
   } = req.body;
 
   const mailOptions = {
-    from: `"${Nome}" <${process.env.SMTP_USER && process.env.SMTP_USER.trim()}>`,
-    to: process.env.EMAIL_DESTINO,  // seu Gmail
+    from: `"${Nome}" <${SMTP_USER}>`,
+    to: EMAIL_DESTINO,
     subject: `Novo cadastro da actividade: ${Nome}`,
     text: `
 Nome: ${Nome}
@@ -53,11 +67,13 @@ Comentários: ${Comentarios || "Nenhum"}
 
   try {
     await transporter.sendMail(mailOptions);
-    console.log(`✅ Email enviado para ${process.env.EMAIL_DESTINO}`);
+    console.log("✅ Email enviado com sucesso!");
     res.send("Formulário enviado com sucesso! ✅");
   } catch (error) {
-    console.error("❌ Erro ao enviar e-mail:", error);
-    res.status(500).send("Erro ao enviar o formulário. Tente novamente ❌");
+    console.error("❌ Erro completo ao enviar e-mail:");
+    console.error(error);
+    // Envia o erro completo para o front-end (temporário, só para debug)
+    res.status(500).send(`Erro ao enviar e-mail: ${error.message}`);
   }
 });
 
