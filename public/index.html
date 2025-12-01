@@ -1,71 +1,89 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>Formulário</title>
+  <title>Preencha o Formulário</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <h2>Enviar Mensagem</h2>
+  <h1>Preencha este formulário para fazer parte da actividade!</h1>
 
-  <form id="formulario">
-    <input type="text" name="Nome" placeholder="Nome" required><br><br>
-    <input type="number" name="Idade" placeholder="Idade"><br><br>
-    <input type="email" name="Email" placeholder="Email" required><br><br>
-    <input type="text" name="Telefone" placeholder="Telefone" required><br><br>
-    <input type="text" name="Pretende" placeholder="O que pretende?"><br><br>
-    <input type="text" name="Instituicao" placeholder="Instituição"><br><br>
-    <input type="text" name="Saber" placeholder="Como soube de nós?"><br><br>
-    <textarea name="Comentarios" placeholder="Comentário"></textarea><br><br>
+  <main class="principal">
+    <form id="formulario">
 
-    <button type="submit">Enviar</button>
-  </form>
+      <h1>Cadastro</h1>
 
-  <p id="resposta"></p>
+      <label for="Nome">Nome</label>
+      <input name="Nome" type="text" id="Nome" required>
+
+      <label for="Idade">Idade</label>
+      <input name="Idade" type="number" id="Idade" required>
+
+      <label for="Email">Email</label>
+      <input name="Email" type="email" id="Email" required>
+
+      <label for="Telefone">Telefone</label>
+      <input name="Telefone" type="number" id="Telefone" required>
+
+      <label for="Pretende">QUAL É A SUA VISÃO CONSERNENTE A ACTIVIDADE?</label>
+      <input name="Pretende" type="text" id="Pretende" required>
+
+      <label for="Instituicao">QUAIS SÃO OS RESULTADOS QUE QUERES OBTER COM ESTA ACTIVIDADE?</label>
+      <input name="Instituicao" type="text" id="Instituicao" required>
+
+      <label for="Saber">COMO SOUBESTE DA ACTIVIDADE?</label>
+      <input name="Saber" type="text" id="Saber" required>
+
+      <label for="Comentarios">Comentários</label>
+      <input name="Comentarios" type="text" id="Comentarios">
+
+      <button type="submit">Enviar</button>
+
+    </form>
+  </main>
 
   <script>
-  document.getElementById("formulario").addEventListener("submit", async function(e) {
-    e.preventDefault();
+    document.getElementById("formulario").addEventListener("submit", async function(e) {
+      e.preventDefault();
 
-    const data = {
-      Nome: document.getElementById("Nome").value.trim(),
-      Idade: document.getElementById("Idade").value.trim(),
-      Email: document.getElementById("Email").value.trim(),
-      Telefone: document.getElementById("Telefone").value.trim(),
-      Pretende: document.getElementById("Pretende").value.trim(),
-      Instituicao: document.getElementById("Instituicao").value.trim(),
-      Saber: document.getElementById("Saber").value.trim(),
-      Comentarios: document.getElementById("Comentarios").value.trim()
-    };
+      const data = {
+        Nome: document.getElementById("Nome").value.trim(),
+        Idade: document.getElementById("Idade").value.trim(),
+        Email: document.getElementById("Email").value.trim(),
+        Telefone: document.getElementById("Telefone").value.trim(),
+        Pretende: document.getElementById("Pretende").value.trim(),
+        Instituicao: document.getElementById("Instituicao").value.trim(),
+        Saber: document.getElementById("Saber").value.trim(),
+        Comentarios: document.getElementById("Comentarios").value.trim()
+      };
 
-    if (!data.Nome || !data.Idade || !data.Email || !data.Telefone || !data.Pretende || !data.Instituicao || !data.Saber) {
-      alert("Preencha todos os campos obrigatórios!");
-      return;
-    }
-
-    try {
-      const response = await fetch("/enviar", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-      });
-
-      const result = await response.text();
-
-      if (response.ok) {
-        alert(result);
-        this.reset();
-      } else {
-        alert("Erro: " + result);
+      if (!data.Nome || !data.Idade || !data.Email || !data.Telefone || !data.Pretende || !data.Instituicao || !data.Saber) {
+        alert("Preencha todos os campos obrigatórios!");
+        return;
       }
 
-    } catch (error) {
-      alert("Erro ao enviar os dados.");
-      console.error(error);
-    }
-  });
-</script>
+      try {
+        const response = await fetch("/enviar", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.text();
+        alert(result);
+
+        if (response.ok) {
+          this.reset();
+        }
+
+      } catch (error) {
+        alert("Erro ao enviar os dados. Tente novamente.");
+        console.error(error);
+      }
+    });
+  </script>
 
 </body>
 </html>
