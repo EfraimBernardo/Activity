@@ -44,7 +44,7 @@ app.post("/enviar", async (req, res) => {
 
     const mailOptions = {
       from: `"Formulário Actividade" <formulario@${process.env.DOMINIO}>`,
-      to: process.env.EMAIL_DESTINO,
+      to: "efraimjoaomanuelbernardo@gmail.com",
       subject: "Nova Inscrição na Actividade",
       html: `
         <h2>Nova Inscrição Recebida</h2>
