@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Formulário</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <h2>Enviar Mensagem</h2>
+
+  <form id="formulario">
+    <input type="text" name="Nome" placeholder="Nome" required><br><br>
+    <input type="number" name="Idade" placeholder="Idade"><br><br>
+    <input type="email" name="Email" placeholder="Email" required><br><br>
+    <input type="text" name="Telefone" placeholder="Telefone" required><br><br>
+    <input type="text" name="Pretende" placeholder="O que pretende?"><br><br>
+    <input type="text" name="Instituicao" placeholder="Instituição"><br><br>
+    <input type="text" name="Saber" placeholder="Como soube de nós?"><br><br>
+    <textarea name="Comentarios" placeholder="Comentário"></textarea><br><br>
+
+    <button type="submit">Enviar</button>
+  </form>
+
+  <p id="resposta"></p>
+
+  <script>
+  document.getElementById("formulario").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const data = {
+      Nome: document.getElementById("Nome").value.trim(),
+      Idade: document.getElementById("Idade").value.trim(),
+      Email: document.getElementById("Email").value.trim(),
+      Telefone: document.getElementById("Telefone").value.trim(),
+      Pretende: document.getElementById("Pretende").value.trim(),
+      Instituicao: document.getElementById("Instituicao").value.trim(),
+      Saber: document.getElementById("Saber").value.trim(),
+      Comentarios: document.getElementById("Comentarios").value.trim()
+    };
+
+    if (!data.Nome || !data.Idade || !data.Email || !data.Telefone || !data.Pretende || !data.Instituicao || !data.Saber) {
+      alert("Preencha todos os campos obrigatórios!");
+      return;
+    }
+
+    try {
+      const response = await fetch("/enviar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+
+      const result = await response.text();
+
+      if (response.ok) {
+        alert(result);
+        this.reset();
+      } else {
+        alert("Erro: " + result);
+      }
+
+    } catch (error) {
+      alert("Erro ao enviar os dados.");
+      console.error(error);
+    }
+  });
+</script>
+
+</body>
+</html>

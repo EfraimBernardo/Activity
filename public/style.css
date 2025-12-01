@@ -1,0 +1,81 @@
+/* Corpo */
+body {
+    background-color: #f2f2f2;
+    /* display: flex; */
+    /* justify-content: center;
+    align-items: center; */
+    justify-items: center;
+    align-content: center;  
+}
+
+/* Formulário */
+#formulario {
+    background-color: #fff;
+    color: #0b273b;
+    width: 28vw;
+    min-width: 280px;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Labels e inputs */
+#formulario label {
+    font-weight: bold;
+    margin-bottom: 3px;
+}
+
+#formulario input {
+    width: 96%;
+    height: 35px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    transition: 0.2s;
+}
+
+#formulario input:focus {
+    border-color: #0b273b;
+    outline: none;
+    box-shadow: 0 0 5px rgba(11, 39, 59, 0.4);
+}
+
+/* Botão */
+#formulario button {
+    width: 100%;
+    height: 40px;
+    background: #0b273b;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.25s;
+}
+
+#formulario button:hover {
+    background: #133c5a;
+}
+
+/* Tabela */
+table {
+    margin-top: 30px;
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    font-size: 16px;
+}
+
+table th, table td {
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+
+table th {
+    background: #0b273b;
+    color: #fff;
+    text-align: left;
+}

@@ -1,0 +1,25 @@
+{
+  "name": "activity",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/EfraimBernardo/Activity#readme",
+  "bugs": {
+    "url": "https://github.com/EfraimBernardo/Activity/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EfraimBernardo/Activity.git"
+  },
+  "license": "ISC",
+  "author": "Efraim Bernardo",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "test": "node server.js"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^5.2.0",
+    "nodemailer": "^7.0.11"
+  }
+}
